@@ -1,2 +1,22 @@
 trends_available() extracts locations where there are trending topics.
-get_trends("country name")
+get_trends("country/ city name") would get the trends of the topics within the assigned country, the results include hashtag and url
+search_tweets() is used for finding the time series of the assigned tweets
+ts_plot() is utilised to visualize time series of tweet activity
+ts_data() returns data containing the frequency of tweets over a specified interval of time.
+melt() convert an object into a molten data frame
+
+
+--- To plot the tweets based on time series ---
+# Merge the two time series objects and retain "time" column
+merged_df <- merge(puma_ts, nike_ts, by = "time", all = TRUE)
+head(merged_df)
+
+# Stack the tweet frequency columns
+melt_df <- melt(merged_df, na.rm = TRUE, id.vars = "time")
+
+# View the output
+head(melt_df)
+
+# Plot frequency of tweets on Puma and Nike
+ggplot(data = melt_df, aes(x = time, y = value, col = variable))+
+  geom_line(lwd = 0.8)
