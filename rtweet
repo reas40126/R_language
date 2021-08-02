@@ -1,0 +1,2 @@
+trends_available() extracts locations where there are trending topics.
+get_trends("country name")
