@@ -1,0 +1,21 @@
+# Perform sentiment analysis for tweets on `Climate change` 
+sa.value <- get_nrc_sentiment(tweets_cc$text)
+
+# View the sentiment scores
+head(sa.value, 10)
+
+# Calculate sum of sentiment scores
+score <- colSums(sa.value[,])
+
+# Convert the sum of scores to a data frame
+score_df <- data.frame(score)
+
+# Convert row names into 'sentiment' column and combine with sentiment scores
+score_df2 <- cbind(sentiment = row.names(score_df),  
+				  score_df, row.names = NULL)
+print(score_df2)
+
+# Plot the sentiment scores
+ggplot(data = score_df2, aes(x = sentiment, y = score, fill = sentiment)) +
+  	 geom_bar(stat = "identity") +
+       theme(axis.text.x = element_text(angle = 45, hjust = 1))
