@@ -43,3 +43,74 @@ betwn_nw_sort <- betwn_nw %>%
 
 # View users with the top 10 betweenness scores 
 betwn_nw_sort[1:10]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Twitter retweet network visualisation
+
+# Create a basic network plot
+plot.igraph(nw_rtweet)
+
+# Create a network plot with formatting attributes
+set.seed(1234)
+plot(nw_rtweet, asp = 9/12, 
+     vertex.size = 10,
+	   vertex.color = "green", 
+     edge.arrow.size = 0.5,
+     edge.color = "black",
+     vertex.label.cex = 0.9,
+     vertex.label.color = "black")
+
+# Create a variable for out-degree
+deg_out <- degree(nw_rtweet, mode = c("out"))
+deg_out
+
+# Amplify the out-degree values
+vert_size <- (deg_out * 3) + 5
+
+# Set vertex size to amplified out-degree values
+set.seed(1234)
+plot(nw_rtweet, asp = 10/11, 
+     vertex.size = vert_size, vertex.color = "lightblue",
+     edge.arrow.size = 0.5,
+     edge.color = "grey",
+     vertex.label.cex = 0.8,
+     vertex.label.color = "black")
+
+# Create a column and categorize follower counts above and below 500
+followers$follow <- ifelse(followers$followers_count > 500, "1", "0")
+head(followers)
+
+# Assign the new column as vertex attribute to the retweet network
+V(nw_rtweet)$followers <- followers$follow
+vertex_attr(nw_rtweet)
+
+# Set the vertex colors based on follower count and create a plot
+sub_color <- c("lightgreen", "tomato")
+plot(nw_rtweet, asp = 9/12,
+     vertex.size = vert_size, edge.arrow.size = 0.5,
+     vertex.label.cex = 0.8,
+     vertex.color = sub_color[as.factor(vertex_attr(nw_rtweet, "followers"))],
+     vertex.label.color = "black", vertex.frame.color = "grey")
+
+Put twitter data on the map
+# Extract 18000 tweets on #vegan
+vegan <- search_tweets("#vegan", n = 18000)
+
+# Extract geo-coordinates data to append as new columns
+vegan_coord <- lat_lng(vegan)
+
+# View the columns with geo-coordinates for first 20 tweets
+head(vegan_coord[c("lat","lng")], 20)
+
+# Omit rows with missing geo-coordinates in the data frame
+vegan_geo <- na.omit(vegan_coord[,c("lat", "lng")])
+
+# View the output
+head(vegan_geo)
+
+# Plot longitude and latitude values of tweets on the US state map
+map(database = "state", fill = TRUE, col = "light yellow")
+with(vegan_geo, points(lng, lat, pch = 20, cex = 1, col = 'blue'))
+
+# Plot longitude and latitude values of tweets on the world map
+map(database = "world", fill = TRUE, col = "light yellow")
+with(vegan_geo, points(lng, lat, pch = 20, cex = 1, col = 'blue')) 
