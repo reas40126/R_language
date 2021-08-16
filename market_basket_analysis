@@ -52,3 +52,19 @@ fun_combi = function(x) choose(n_items, x)
 # Plot the number of combinations
 ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
 		stat_function(fun = fun_combi) + xlim(0,n_items)
+
+# Create dataset with basket counts and inspect results
+basket_size = Online_Retail_clean %>%
+  group_by(InvoiceNo) %>%
+  summarize( n_total = n(),
+             n_items = n_distinct(StockCode))
+
+head(basket_size)
+
+# Calculate average values
+basket_size %>% summarize(avg_total_items = mean(n_total), 
+                          avg_dist_items = mean(n_items))
+
+# Distribution of distinct items in baskets
+ggplot(basket_size, aes(n_items)) +
+  geom_bar() + ggtitle("Distribution of basket sizes")
