@@ -68,3 +68,11 @@ basket_size %>% summarize(avg_total_items = mean(n_total),
 # Distribution of distinct items in baskets
 ggplot(basket_size, aes(n_items)) +
   geom_bar() + ggtitle("Distribution of basket sizes")
+
+# Number of baskets containing both items
+Online_Retail_clean %>%
+  filter(Description %in% c("HERB MARKER ROSEMARY", "HERB MARKER THYME")) %>%
+  group_by(InvoiceNo) %>% 
+  summarize(n = n()) %>% 
+  filter(n==2) %>% 
+  summarize(n_distinct(InvoiceNo))
