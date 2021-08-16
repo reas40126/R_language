@@ -1,0 +1,54 @@
+# Have a glimpse at the dataset
+glimpse(Online_Retail_2011_Q1)
+
+# Filter a single basket
+One_basket = Online_Retail_2011_Q1 %>%
+				filter(InvoiceNo == 540180)
+
+# Have a glimpse at the dataset
+glimpse(Online_Retail_2011_Q1)
+
+# Filter a single basket
+One_basket = Online_Retail_2011_Q1 %>%
+				filter(InvoiceNo == 540180)
+
+print(One_basket)
+
+# Basket size
+n_distinct(One_basket$StockCode)
+
+# Have a glimpse at the dataset
+glimpse(Online_Retail_2011_Q1)
+
+# Filter a single basket
+One_basket = Online_Retail_2011_Q1 %>%
+				filter(InvoiceNo == 540180)
+
+print(One_basket)
+
+# Basket size
+n_distinct(One_basket$StockCode)
+
+# Total number of items purchased
+One_basket %>% summarise(sum(Quantity))
+
+# Plot the total number of items within the basket
+ggplot(One_basket, aes(x=reorder(Description, Quantity),
+                                 y = Quantity)) + 
+       geom_col() + coord_flip() + xlab("Items")
+
+# Plot the total number of items within the basket
+ggplot(One_basket, aes(x=reorder(Description, Quantity,
+                                 function(x) sum(x)),
+                                 y = Quantity)) + 
+       geom_col() + coord_flip() + xlab("Items")
+
+# Define number of items 
+n_items = 100
+
+# Specify the function to be plotted
+fun_combi = function(x) choose(n_items, x)
+
+# Plot the number of combinations
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+		stat_function(fun = fun_combi) + xlim(0,n_items)
