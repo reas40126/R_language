@@ -76,3 +76,40 @@ Online_Retail_clean %>%
   summarize(n = n()) %>% 
   filter(n==2) %>% 
   summarize(n_distinct(InvoiceNo))
+
+To understand the patterns within transactions, the analysis is used to understand what are the most purchased items and the frequencies of items appear in each transaction. 
+
+# Splitting transactions
+data_list = split(Online_Retail_clean$Description,
+                  Online_Retail_clean$InvoiceNo)
+
+# Transform data into a transactional dataset
+Online_trx = as(data_list, "transactions")
+
+# Summary of transactions
+summary(Online_trx)
+
+# inspect first 3 transactions
+inspect(head(Online_trx,3))
+
+# inspect last 5 transactions
+inspect(tail(Online_trx,5))
+
+# inspect transaction 10
+inspect(Online_trx[10])
+
+# Inspect specific transactions, 12nd, 20th 22th
+inspect(Online_trx[c(12, 20, 22)])
+
+The metrics oof the analysis
+# Frequent itemsets for all items
+support_all = 
+	apriori(Online_trx,
+            parameter = list(target="frequent itemsets",
+                             supp = 0.01)
+                      )
+
+# Inspect the 5 most frequent items
+inspect(head(sort(support_all, by="support"), 5))
+
+
